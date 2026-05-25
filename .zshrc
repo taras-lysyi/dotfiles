@@ -1,7 +1,7 @@
 export EDITOR='nvim'
 export VISUAL='nvim'
 export PATH=$PATH:$HOME/go/bin
-export GOPATH=$HOME/usr/local/go/bin/go
+export GOPATH=$HOME/go
 export PATH=$PATH:$HOME/dev/flutter/bin
 
 # Completions (cached, skip security audit)
@@ -61,14 +61,18 @@ bindkey "^[[B" history-beginning-search-forward-end
 alias ys='yarn start'
 alias ns='npm start'
 alias dev='cd && dev/'
-alias c='clear'
+alias c='claude'
+alias cc='claude -c'
 alias e='exit'
 alias n='nvim'
 alias v='vim'
+alias p='pi'
 alias ni='cd && .config/nvim && n'
-alias ls='eza --icons --color=always'
-alias ll='eza -l --icons --color=always'
-alias la='eza -la --icons --color=always'
+# eza with OSC 8 hyperlinks → Alt+click in kitty opens files in tmux nvim split.
+alias ls='eza --icons --color=always --hyperlink'
+alias ll='eza -l --icons --color=always --hyperlink'
+alias la='eza -la --icons --color=always --hyperlink'
+alias tree='eza --tree --icons --color=always --hyperlink'
 alias gk='/opt/homebrew/bin/gk'
 # Lazy load nvm for faster startup
 export NVM_DIR="$HOME/.nvm"
@@ -117,11 +121,33 @@ ulimit -n 10240
 
 
 
-# git account switch (needs bash completion compat)
-if [ -f "$HOME/.git-acc" ]; then
-  autoload -Uz bashcompinit && bashcompinit
-  source "$HOME/.git-acc"
-fi
+# Auto-switch gh CLI account based on current directory:
+# ~/base/dutch/* -> taras-lysyi-solid (work)
+# everything else -> taras-lysyi (personal)
+_auto_switch_gh_account() {
+  if [[ "$PWD" = "$HOME/base/dutch"* || "$PWD" = "$HOME/.worktrees/emr"* ]]; then
+    gh auth switch --user taras-lysyi-solid 2>/dev/null
+  else
+    gh auth switch --user taras-lysyi 2>/dev/null
+  fi
+}
+add-zsh-hook chpwd _auto_switch_gh_account
+
+# Auto-switch Claude Code account based on current directory:
+# ~/base/dutch/* -> work account (~/.claude-work)
+# everything else -> personal account (~/.claude, default)
+_auto_switch_claude_account() {
+  if [[ "$PWD" = "$HOME/base/dutch"* || "$PWD" = "$HOME/.worktrees/emr"* ]]; then
+    export CLAUDE_CONFIG_DIR="$HOME/.claude-work"
+  else
+    unset CLAUDE_CONFIG_DIR
+  fi
+}
+add-zsh-hook chpwd _auto_switch_claude_account
+
+# Run once on shell startup (chpwd only fires on cd, not initial shell)
+_auto_switch_gh_account
+_auto_switch_claude_account
 
 # Jira credentials
 [ -f "$HOME/.jira.env" ] && source "$HOME/.jira.env"
@@ -141,5 +167,13 @@ export PATH="/opt/homebrew/opt/go/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/fvm/bin:$PATH"
 
+# bun completions
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
 
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
+# opencode
+export PATH="$HOME/.opencode/bin:$PATH"
 
