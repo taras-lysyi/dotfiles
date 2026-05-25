@@ -1,0 +1,24 @@
+layout {
+    default_tab_template {
+        pane size=1 borderless=true {
+            plugin location="file:~/.config/zellij/plugins/zjstatus.wasm" {
+                // Minimal Catppuccin-style tab bar.
+                // Requires a Nerd Font for the rounded powerline glyphs:  
+                format_left   "#[bg=#181825] "
+                format_center "{tabs}"
+                format_right  "#[bg=#181825] "
+                format_space  "#[bg=#181825]"
+
+                border_enabled  "false"
+
+                tab_normal "#[fg=#6c7086,bg=#181825] {index} {name} {sync_indicator}{fullscreen_indicator}{floating_indicator}"
+                tab_active "#[fg=#89b4fa,bg=#181825]#[fg=#181825,bg=#89b4fa,bold] {index} {name} {sync_indicator}{fullscreen_indicator}{floating_indicator}#[fg=#89b4fa,bg=#181825] "
+
+                tab_sync_indicator       " "
+                tab_fullscreen_indicator "□ "
+                tab_floating_indicator   "󰉈 "
+            }
+        }
+        children
+    }
+}

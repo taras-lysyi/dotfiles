@@ -1,21 +1,50 @@
 theme "catppuccin-mocha"
 
-default_layout "compact"
-pane_frames false
+default_layout "minimal"
+pane_frames true
 simplified_ui true
 hide_session_name true
 
-on_force_close "quit"
-disable_session_metadata true
+on_force_close "detach"
+session_serialization false
+disable_session_metadata false
 auto_set_tab_name true
-session_name "main"
-attach_to_session true
+// session_name "main"
+attach_to_session false
 
 show_startup_tips false
 show_release_notes false
 
 keybinds clear-defaults=true {
     shared_except "locked" {
+        bind "Ctrl f" {
+            LaunchOrFocusPlugin "file:~/.config/zellij/plugins/zellij_forgot.wasm" {
+                "next tab"          "Ctrl ."
+                "prev tab"          "Ctrl ,"
+                "new tab"           "Alt t"
+                "close tab"         "Alt w"
+                "rename tab"        "Alt r"
+                "move tab left"     "Alt Left"
+                "move tab right"    "Alt Right"
+                "goto tab 1-9"      "Alt 1-9"
+                "pane mode"         "Alt Space"
+                "move mode"         "Alt m"
+                "move: pane hjkl"   "hjkl in move mode"
+                "move: rotate"      "Tab"
+                "pane: focus left"  "h"
+                "pane: focus down"  "j"
+                "pane: focus up"    "k"
+                "pane: focus right" "l"
+                "pane: split up"    "u"
+                "pane: split down"  "d"
+                "pane: split right" "v"
+                "pane: new"         "n"
+                "pane: close"       "x"
+                "pane: fullscreen"  "f"
+                "pane: rename"      "r"
+                floating true
+            }
+        }
         bind "Ctrl ." { GoToNextTab; }
         bind "Ctrl ," { GoToPreviousTab; }
         bind "Alt t" { NewTab; }
@@ -36,10 +65,58 @@ keybinds clear-defaults=true {
         bind "Alt 7" { GoToTab 7; }
         bind "Alt 8" { GoToTab 8; }
         bind "Alt 9" { GoToTab 9; }
+
+        // Enter pane mode
+        bind "Alt Space" { SwitchToMode "Pane"; }
+        // Enter move mode
+        bind "Alt m" { SwitchToMode "Move"; }
+        // Open session manager: switch/create/rename/delete sessions
+        bind "Alt o" {
+            LaunchOrFocusPlugin "session-manager" {
+                floating true
+                move_to_focused_tab true
+            }
+        }
+        // Detach from session
+        bind "Alt d" { Detach; }
     }
     renametab {
         bind "Enter" { SwitchToMode "Normal"; }
         bind "Esc" { UndoRenameTab; SwitchToMode "Normal"; }
+    }
+    renamepane {
+        bind "Enter" { SwitchToMode "Normal"; }
+        bind "Esc" { UndoRenamePane; SwitchToMode "Normal"; }
+    }
+    move {
+        bind "h" { MovePane "Left"; }
+        bind "j" { MovePane "Down"; }
+        bind "k" { MovePane "Up"; }
+        bind "l" { MovePane "Right"; }
+        bind "Tab" { MovePane; }
+        bind "n" { MovePaneBackwards; }
+        bind "Esc" { SwitchToMode "Normal"; }
+        bind "Enter" { SwitchToMode "Normal"; }
+    }
+    pane {
+        bind "h" { MoveFocus "Left"; }
+        bind "j" { MoveFocus "Down"; }
+        bind "k" { MoveFocus "Up"; }
+        bind "l" { MoveFocus "Right"; }
+        bind "H" { Resize "Increase Left"; }
+        bind "J" { Resize "Increase Down"; }
+        bind "K" { Resize "Increase Up"; }
+        bind "L" { Resize "Increase Right"; }
+        bind "u" { NewPane "Up"; }
+        bind "d" { NewPane "Down"; }
+        bind "v" { NewPane "Right"; }
+        bind "n" { NewPane; }
+        bind "x" { CloseFocus; }
+        bind "f" { ToggleFocusFullscreen; }
+        bind "w" { ToggleFloatingPanes; SwitchToMode "Normal"; }
+        bind "r" { SwitchToMode "RenamePane"; PaneNameInput 0; }
+        bind "Esc" { SwitchToMode "Normal"; }
+        bind "Enter" { SwitchToMode "Normal"; }
     }
 }
 

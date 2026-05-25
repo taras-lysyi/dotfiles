@@ -1,0 +1,24 @@
+layout {
+    default_tab_template {
+        pane size=1 borderless=true {
+            plugin location="file:~/.config/zellij/plugins/zjstatus.wasm" {
+                format_left   "#[bg=#181825] {tabs}"
+                format_center ""
+                format_right  "#[bg=#181825] "
+                format_space  "#[bg=#181825]"
+
+                border_enabled "false"
+
+                tab_normal    "#[fg=#6c7086,bg=#181825] {index} {name} "
+                tab_active    "#[fg=#89b4fa,bg=#181825,bold] {index} {name} "
+                tab_separator "#[fg=#45475a,bg=#181825] / "
+                tab_rename    "#[fg=#f9e2af,bg=#181825] {index} {name} "
+            }
+        }
+        children
+    }
+
+    tab {
+        pane
+    }
+}
