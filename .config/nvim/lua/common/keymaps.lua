@@ -45,6 +45,9 @@ vim.keymap.set("v", "p", '"_dP', { desc = "Paste without yanking" })
 vim.keymap.set("n", "]q", ":cn<CR>", { desc = "Next quickfix item" })
 vim.keymap.set("n", "[q", ":cp<CR>", { desc = "Previous quickfix item" })
 
+vim.keymap.set("n", "]d", function() require("utils.ts_usages").next() end, { desc = "Next usage of word under cursor" })
+vim.keymap.set("n", "[d", function() require("utils.ts_usages").prev() end, { desc = "Prev usage of word under cursor" })
+
 -- remove /n on copy in terminal with C-v
 -- used for copying to clipboard in terminal
 vim.cmd([[

@@ -76,11 +76,11 @@ nvim_tree.setup({
   },
   git = {
     enable = true,
-    ignore = true,
+    ignore = false,
     timeout = 500,
   },
   view = {
-    width = 50,
+    width = 36,
     side = "left",
     number = false,
     relativenumber = false,
@@ -150,6 +150,7 @@ nvim_tree.setup({
   },
   actions = {
     open_file = {
+      quit_on_open = true,
       resize_window = true,
       window_picker = {
         enable = true,

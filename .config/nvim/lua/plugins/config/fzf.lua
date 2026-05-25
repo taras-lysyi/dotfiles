@@ -109,6 +109,24 @@ vim.keymap.set("n", "<leader>v", "<cmd>FzfLua buffers<cr>", vim.tbl_extend("forc
 -- ,t - Git status
 vim.keymap.set("n", "<leader>t", "<cmd>FzfLua git_status<cr>", vim.tbl_extend("force", opts, { desc = "Git status" }))
 
+-- ,dd / ,dw - Diagnostics
+vim.keymap.set("n", "<leader>dd", function()
+  fzf.diagnostics_document()
+end, vim.tbl_extend("force", opts, { desc = "Document diagnostics" }))
+
+vim.keymap.set("n", "<leader>dw", function()
+  fzf.diagnostics_workspace()
+end, vim.tbl_extend("force", opts, { desc = "Workspace diagnostics" }))
+
+-- ,ss / ,sw - Symbols
+vim.keymap.set("n", "<leader>ss", function()
+  fzf.lsp_document_symbols()
+end, vim.tbl_extend("force", opts, { desc = "Document symbols" }))
+
+vim.keymap.set("n", "<leader>sw", function()
+  fzf.lsp_workspace_symbols()
+end, vim.tbl_extend("force", opts, { desc = "Workspace symbols" }))
+
 -- ,p - Projects (using project.nvim with custom fzf picker)
 vim.keymap.set("n", "<leader>p", function()
   local project_nvim = require("project_nvim.project")

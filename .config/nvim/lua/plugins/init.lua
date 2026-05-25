@@ -62,6 +62,10 @@ require("lazy").setup({
       { "<leader>v", desc = "Buffers" },
       { "<leader>t", desc = "Git status" },
       { "<leader>p", desc = "Projects" },
+      { "<leader>dd", desc = "Document diagnostics" },
+      { "<leader>dw", desc = "Workspace diagnostics" },
+      { "<leader>ss", desc = "Document symbols" },
+      { "<leader>sw", desc = "Workspace symbols" },
       { "gr", desc = "LSP references" },
     },
     cmd = { "FzfLua" },
@@ -93,33 +97,73 @@ require("lazy").setup({
     end,
   },
 
-  -- Motion
+  -- Motion (flash.nvim replaces hop.nvim)
   {
-    "phaazon/hop.nvim",
-    commit = "b93ed4cea9c7df625d04e41cb15370b5c43cb578",
+    "folke/flash.nvim",
+    event = "VeryLazy",
     keys = {
-      { "<space>s", ":HopChar2MW<cr>", mode = { "n", "v" }, desc = "Hop to characters" },
+      {
+        "<space>s",
+        mode = { "n", "x", "o" },
+        function() require("flash").jump() end,
+        desc = "Flash jump",
+      },
+      {
+        "<space>S",
+        mode = { "n", "x", "o" },
+        function() require("flash").treesitter() end,
+        desc = "Flash treesitter",
+      },
+      {
+        "r",
+        mode = "o",
+        function() require("flash").remote() end,
+        desc = "Remote flash",
+      },
+      {
+        "R",
+        mode = { "o", "x" },
+        function() require("flash").treesitter_search() end,
+        desc = "Treesitter search",
+      },
     },
     config = function()
-      require("hop").setup()
+      require("plugins.config.flash")
     end,
   },
 
   -- UI
+  -- snacks.nvim — folke's UX swiss-army (dashboard, indent, notifier, input, scroll, bigfile)
+  {
+    "folke/snacks.nvim",
+    priority = 1000,
+    lazy = false,
+    config = function()
+      require("plugins.config.snacks")
+    end,
+  },
+  -- noice.nvim — modern cmdline + LSP UI
+  {
+    "folke/noice.nvim",
+    event = "VeryLazy",
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      "folke/snacks.nvim",
+    },
+    config = function()
+      require("plugins.config.noice")
+    end,
+  },
   {
     "stevearc/dressing.nvim",
+    enabled = false, -- replaced by snacks.input
     config = function()
       require("plugins.config.lsp.dressing")
     end,
   },
   {
     "nvim-lualine/lualine.nvim",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-    },
-    config = function()
-      require("plugins.config.lualine")
-    end,
+    enabled = false,
   },
   {
     -- Using maintained fork with updated APIs
@@ -130,22 +174,11 @@ require("lazy").setup({
   },
   {
     "goolord/alpha-nvim",
-    config = function()
-      require("plugins.config.alpha")
-    end,
+    enabled = false,
   },
   "kevinhwang91/nvim-bqf",
-  {
-    "akinsho/toggleterm.nvim",
-    keys = {
-      { "<C-t>", desc = "Toggle terminal" },
-      { "<C-a>", mode = { "n", "i", "t" }, desc = "Toggle all terminals" },
-    },
-    cmd = { "ToggleTerm", "ToggleTermToggleAll" },
-    config = function()
-      require("plugins.config.toggleterm")
-    end,
-  },
+  -- toggleterm replaced by snacks.terminal
+  { "akinsho/toggleterm.nvim", enabled = false },
   {
     "akinsho/bufferline.nvim",
     config = function()
@@ -206,24 +239,16 @@ require("lazy").setup({
       enable_close_on_slash = false,
     },
   },
-  -- NOTE: These plugins are temporarily disabled because they're not yet compatible
-  -- with nvim-treesitter's main branch (they still use the deprecated nvim-treesitter.configs)
-  -- Re-enable once they're updated or switch nvim-treesitter back to master branch
-  -- {
-  --   "nvim-treesitter/nvim-treesitter-textobjects",
-  --   dependencies = { "nvim-treesitter/nvim-treesitter" },
-  --   lazy = false,
-  -- },
-  -- {
-  --   "nvim-treesitter/nvim-treesitter-context",
-  --   dependencies = { "nvim-treesitter/nvim-treesitter" },
-  --   lazy = false,
-  --   opts = {
-  --     enable = true,
-  --     max_lines = 0,
-  --     trim_scope = "outer",
-  --   },
-  -- },
+  {
+    "nvim-treesitter/nvim-treesitter-context",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    lazy = false,
+    opts = {
+      enable = true,
+      max_lines = 2,
+      trim_scope = "outer",
+    },
+  },
   {
     "m-demare/hlargs.nvim",
     dependencies = { "nvim-treesitter/nvim-treesitter" },
@@ -268,7 +293,7 @@ require("lazy").setup({
   -- LSP UI
   "folke/trouble.nvim",
   "MunifTanjim/nui.nvim",
-  "lukas-reineke/indent-blankline.nvim",
+  { "lukas-reineke/indent-blankline.nvim", enabled = false }, -- replaced by snacks.indent
   {
     "SmiteshP/nvim-navic",
     dependencies = {
@@ -429,6 +454,13 @@ require("lazy").setup({
     },
   },
 
+  -- Amp
+  {
+    "sourcegraph/amp.nvim",
+    branch = "main",
+    lazy = false,
+    opts = { auto_start = true, log_level = "info" },
+  },
 
   -- Git
   {
@@ -460,25 +492,20 @@ require("lazy").setup({
       local worktree = require("git-worktree")
       local Job = require("plenary.job")
 
-      local function get_repo_root()
+      local function get_worktrees_base_path()
         local result = {}
         Job:new({
           command = "git",
-          args = { "rev-parse", "--show-toplevel" },
+          args = { "rev-parse", "--path-format=absolute", "--git-common-dir" },
           on_exit = function(j, return_val)
             if return_val == 0 then
               result = j:result()
             end
           end,
         }):sync()
-        return result[1]
-      end
-
-      local function get_worktrees_base_path()
-        local repo_root = get_repo_root()
-        if not repo_root then return nil end
-        local parent = vim.fn.fnamemodify(repo_root, ":h")
-        return parent
+        if not result[1] then return nil end
+        -- --git-common-dir returns the main repo's .git dir; go up twice to get the parent
+        return vim.fn.fnamemodify(result[1], ":h:h")
       end
 
       local function sanitize_branch_name(branch)

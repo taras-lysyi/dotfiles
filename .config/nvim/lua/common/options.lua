@@ -10,6 +10,8 @@ local options = {
   mouse = "a",                            -- allow the mouse to be used in neovim
   pumheight = 10,                         -- pop up menu height
   showmode = false,                       -- we don't need to see things like -- INSERT -- anymore
+  ruler = false,                          -- hide cursor position from command/status line
+  showcmd = false,                        -- hide partial command display
   showtabline = 2,                        -- always show tabs
   smartcase = true,                       -- smart case
   smartindent = true,                     -- make indenting smarter again
@@ -36,7 +38,7 @@ local options = {
   guicursor = "i:block",
   -- Font settings for GUI Neovim (Neovide, etc.)
   guifont = "SF Mono:h13",
-  laststatus = 3,
+  laststatus = 0,
   -- Better rendering
   smoothscroll = true,
   foldenable = true,
@@ -44,7 +46,7 @@ local options = {
   foldlevel = 100,
   foldmethod = "expr",                    -- use treesitter-based folding
   foldexpr = "v:lua.vim.treesitter.foldexpr()", -- treesitter fold expression
-  foldcolumn = "1",
+  foldcolumn = "0",
   foldlevelstart = 99,
   fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]],
   autoread = true,

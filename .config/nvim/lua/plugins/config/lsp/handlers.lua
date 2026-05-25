@@ -2,12 +2,12 @@ local M = {}
 
 M.setup = function()
   local config = {
-    virtual_text = true,
-    -- show signs
+    virtual_text = false,
+    -- Keep diagnostics quiet in code; use gutter signs + gl float on demand.
     signs = {
       text = {
-        [vim.diagnostic.severity.ERROR] = "",
-        [vim.diagnostic.severity.WARN] = "",
+        [vim.diagnostic.severity.ERROR] = "●",
+        [vim.diagnostic.severity.WARN] = "●",
         [vim.diagnostic.severity.HINT] = "",
         [vim.diagnostic.severity.INFO] = "",
       },
@@ -25,20 +25,21 @@ M.setup = function()
     },
   }
 
-  vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-    border = "rounded",
-    -- Enable syntax highlighting in hover window
-    stylize_markdown = true,
-    -- Focus the hover window to enable scrolling
-    focusable = true,
-    -- Set max width/height for better readability
-    max_width = 80,
-    max_height = 30,
-  })
+  -- Override hover/signatureHelp by wrapping vim.lsp.buf.* with default opts.
+  -- (vim.lsp.with is deprecated in 0.11+, removed-soon. Pass opts directly.)
+  local _hover = vim.lsp.buf.hover
+  vim.lsp.buf.hover = function(opts)
+    return _hover(vim.tbl_deep_extend("force", {
+      border = "rounded",
+      max_width = 80,
+      max_height = 30,
+    }, opts or {}))
+  end
 
-  vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
-    border = "rounded",
-  })
+  local _sig = vim.lsp.buf.signature_help
+  vim.lsp.buf.signature_help = function(opts)
+    return _sig(vim.tbl_deep_extend("force", { border = "rounded" }, opts or {}))
+  end
 
   vim.diagnostic.config(config)
   
@@ -78,10 +79,10 @@ local function lsp_keymaps(bufnr)
   vim.keymap.set("n", "gs", vim.lsp.buf.signature_help, vim.tbl_extend("force", opts, { desc = "Signature help" }))
   vim.keymap.set("n", "gl", vim.diagnostic.open_float, vim.tbl_extend("force", opts, { desc = "Open diagnostic float" }))
   vim.keymap.set("n", "[g", function()
-    vim.diagnostic.goto_prev({ border = "rounded" })
+    vim.diagnostic.jump({ count = -1, float = { border = "rounded" } })
   end, vim.tbl_extend("force", opts, { desc = "Previous diagnostic" }))
   vim.keymap.set("n", "]g", function()
-    vim.diagnostic.goto_next({ border = "rounded" })
+    vim.diagnostic.jump({ count = 1, float = { border = "rounded" } })
   end, vim.tbl_extend("force", opts, { desc = "Next diagnostic" }))
   vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, vim.tbl_extend("force", opts, { desc = "Diagnostic loclist" }))
   vim.keymap.set("n", "ga", vim.lsp.buf.code_action, vim.tbl_extend("force", opts, { desc = "Code action" }))

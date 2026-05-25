@@ -20,6 +20,16 @@ augroup end
 
 local create_autocmds = require("utils").create_autocmds
 
+-- Clean stale shada tmp files left by previous crashed sessions.
+-- Stale tmps make :q slow because nvim retries+merges them on write.
+vim.api.nvim_create_autocmd("VimEnter", {
+  group = vim.api.nvim_create_augroup("ShadaCleanup", { clear = true }),
+  desc = "Remove stale shada tmp files",
+  callback = function()
+    vim.fn.system("rm -f ~/.local/state/nvim/shada/main.shada.tmp.*")
+  end,
+})
+
 -------------------------------------------------------------------------------
 ------ AUTOCOMMANDS
 -------------------------------------------------------------------------------
