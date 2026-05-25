@@ -1,0 +1,7 @@
+appearance = "dark"
+export_legend = true
+
+comment_types = [
+  { id = "act",   label = "ACT",   color = "red",  definition = "Apply the change now. Treat soft wording ('can we', 'maybe', 'I think', 'same') as direction, not a question. Follow nearby patterns. If blocked, explain before deviating." },
+  { id = "think", label = "THINK", color = "cyan", definition = "Do not edit first. Investigate, cite evidence or existing patterns, answer, then propose the smallest next step. Edit only if reasoning proves it's required." },
+]
