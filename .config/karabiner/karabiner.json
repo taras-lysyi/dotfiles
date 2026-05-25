@@ -14,6 +14,7 @@
                                             "^com\\.googlecode\\.iterm2$",
                                             "^net\\.kovidgoyal\\.kitty$",
                                             "^org\\.alacritty$",
+                                            "^com\\.mitchellh\\.ghostty$",
                                             "^md\\.obsidian$",
                                             "^com\\.mojang\\.minecraftlauncher$",
                                             "^com\\.jetbrains\\.goland$",
@@ -42,6 +43,7 @@
                                             "^com\\.googlecode\\.iterm2$",
                                             "^net\\.kovidgoyal\\.kitty$",
                                             "^org\\.alacritty$",
+                                            "^com\\.mitchellh\\.ghostty$",
                                             "^md\\.obsidian$",
                                             "^com\\.jetbrains\\.goland$",
                                             "^com\\.todesktop\\.230313mzl4w4u92$"

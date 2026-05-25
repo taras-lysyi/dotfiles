@@ -2,7 +2,7 @@
 live_config_reload = true
 
 [terminal]
-shell = { program = "/bin/zsh", args = ["-l", "-c", "/opt/homebrew/bin/zellij"] }
+shell = { program = "/bin/zsh", args = ["-l", "-c", "sleep 0.2 && /opt/homebrew/bin/zellij"] }
 
 [env]
 TERM = "xterm-256color"
@@ -12,6 +12,7 @@ padding = { x = 4, y = 4 }
 decorations = "Buttonless"
 option_as_alt = "Both"
 startup_mode = "Windowed"
+dimensions = { columns = 500, lines = 200 }
 
 [scrolling]
 history = 10000
