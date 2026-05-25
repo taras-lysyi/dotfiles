@@ -1,0 +1,65 @@
+# Font
+font-family = "FiraCode Nerd Font Mono"
+font-size = 13
+font-style = "Regular"
+font-style-bold = "Bold"
+font-style-italic = "Light"
+font-style-bold-italic = "SemiBold"
+adjust-cell-height = 2
+font-thicken = true
+
+# Window
+window-padding-x = 4
+window-padding-y = 4
+window-decoration = false
+macos-option-as-alt = true
+
+# Scrollback
+scrollback-limit = 10000000
+
+# Auto-copy selection to clipboard
+copy-on-select = clipboard
+
+# Catppuccin Mocha
+background = 1e1e1e
+foreground = cdd6f4
+cursor-color = f5e0dc
+cursor-text = 1e1e1e
+selection-background = 585b70
+selection-foreground = cdd6f4
+
+palette = 0=#45475a
+palette = 1=#f38ba8
+palette = 2=#a6e3a1
+palette = 3=#f9e2af
+palette = 4=#89b4fa
+palette = 5=#f5c2e7
+palette = 6=#94e2d5
+palette = 7=#bac2de
+palette = 8=#585b70
+palette = 9=#f38ba8
+palette = 10=#a6e3a1
+palette = 11=#f9e2af
+palette = 12=#89b4fa
+palette = 13=#f5c2e7
+palette = 14=#94e2d5
+palette = 15=#a6adc8
+
+# ── Forward Cmd to zellij (zellij handles all tab logic) ──
+keybind = cmd+t=text:\x1bt
+keybind = cmd+w=text:\x1bw
+keybind = cmd+shift+t=text:\x1bt
+keybind = cmd+shift+c=text:\x1bw
+keybind = cmd+shift+r=text:\x1br
+keybind = shift+enter=text:\x1b[13;2u
+keybind = cmd+shift+left=text:\x1b\x1b[D
+keybind = cmd+shift+right=text:\x1b\x1b[C
+keybind = cmd+1=text:\x1b1
+keybind = cmd+2=text:\x1b2
+keybind = cmd+3=text:\x1b3
+keybind = cmd+4=text:\x1b4
+keybind = cmd+5=text:\x1b5
+keybind = cmd+6=text:\x1b6
+keybind = cmd+7=text:\x1b7
+keybind = cmd+8=text:\x1b8
+keybind = cmd+9=text:\x1b9
