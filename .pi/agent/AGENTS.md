@@ -1,0 +1,4 @@
+- When a workflow depends on a custom CLI, verify it exists first with `command -v <tool>` and `--help` before relying on it.
+- Use `ctx7` first for library and API docs, use web search when docs are not enough.
+- Use `jira` cli if context of jira tickets is needed.
+- Use `gws` cli for Gmail, Calendar
